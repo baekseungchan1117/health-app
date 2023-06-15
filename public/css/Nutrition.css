@@ -1,0 +1,212 @@
+* {
+  color: white;
+}
+
+.display_flex_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display_flex_around {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.Nt_head {
+  height: 80px;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 10px;
+}
+
+.search_div > form {
+  width: 100%;
+}
+
+.search_div {
+  justify-content: space-around;
+  width: 80%;
+}
+
+.submit_button {
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.goals_today {
+  width: 100%;
+  font-size: 12px;
+  margin-bottom: 1vh;
+}
+
+.goals_today > form {
+  height: 100%;
+}
+
+.exam {
+  width: 80%;
+}
+
+.exam > div {
+  padding: 1vh;
+  width: 100%;
+}
+#modifyGoalsform > div {
+  padding: 1vh;
+}
+
+.goals_today > form {
+  flex-direction: column;
+}
+
+.goals_today > form > div {
+  width: 100%;
+}
+
+#searchResultTable {
+  margin: 1vh;
+  display: flex;
+  flex-direction: column;
+  height: 308px;
+  max-height: 308px;
+  width: auto;
+  z-index: 0;
+  padding: 0 2vh;
+  font-size: 10px;
+  overflow: scroll;
+  border: 1px solid white;
+}
+
+#searchResultTable > ul {
+  margin-top: 1vh;
+  height: 8vh;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 5vh;
+  padding: 1vh;
+  width: 100%;
+}
+
+ul > li > button {
+  border: 0.5px solid white;
+  color: black;
+  border-radius: 5px;
+  margin: 1vh;
+  padding: 0.3vh;
+  width: 24px;
+  font-size: 10px;
+  background-color: white;
+}
+
+li {
+  display: inline-block;
+  list-style: none;
+}
+
+.result_table {
+  width: 55%;
+}
+
+.result_table > ul {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.result_table > ul > li {
+  margin-top: 0.5vh;
+  margin-right: 1vw;
+  white-space: nowrap;
+}
+
+.result_table > div > li {
+  font-size: 2vh;
+  white-space: nowrap;
+}
+
+.material-symbols-outlined {
+  font-size: 4vh;
+}
+
+.Nu_button {
+  border: 1px solid white;
+  background-color: #243b55;
+  border-radius: 20px;
+  width: 100px;
+  padding: 5px;
+}
+
+.eatfoodForm {
+  width: 100%;
+}
+
+.eatfoodForm > div {
+  width: 100%;
+  padding: 5px;
+  padding-right: 10px;
+}
+
+.eatfoodForm > div > input {
+  height: 20px;
+  border-radius: 10px;
+  border: none;
+  padding-left: 8px;
+  background-color: white;
+  color: black;
+  width: 65%;
+}
+
+.noresult {
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+}
+
+#calGoals {
+  flex-direction: column;
+  height: 80px;
+}
+
+#calGoals > div {
+  width: 100%;
+  padding-left: 10px;
+}
+
+.calGoalswidth {
+  width: 40%;
+  padding: 1vh;
+}
+.calGoalswidth > span {
+  font-size: 20px;
+}
+
+.widthset {
+  width: 35%;
+}
+
+section {
+  background: linear-gradient(#141e30, #243b55);
+  margin: 0 5%;
+  border-radius: 10px;
+}
+
+.color_black {
+  color: black;
+}
+.main-view {
+  padding-top: 10px;
+}
+
+.go {
+  width: 13%;
+}
+
+.go > button {
+  background-color: transparent;
+  border: none;
+}
+
+footer .inner {
+  bottom: 68px;
+}

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://kit.fontawesome.com/693f483c38.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Nanum Gothic", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #333;
+      background-color: #e1eaea;
+    }
+
+    /* -------changeButton------------------------------------------------------------------------ */
+    .changeButton {
+      display: flex;
+      padding-top: 2vw;
+      padding-bottom: 2vw;
+      justify-content: space-between;
+    }
+
+    .myPostFont {
+      color: white;
+      font-weight: bold;
+      /* padding-left: 15px; */
+    }
+
+    .changeIcon {
+      display: flex;
+    }
+
+    .changeIcon>.correctionButton:hover {
+      cursor: pointer;
+      background-color: rgba(166, 166, 166, 0.5);
+    }
+
+    .changeIcon>.deleteButton:hover {
+      cursor: pointer;
+      background-color: rgba(166, 166, 166, 0.5);
+    }
+
+    /* ----listTopBar------------------------------------------------------- */
+
+    .listTopBar {
+      margin-top: 3vh;
+      background-color: #263d56;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      color: white;
+      font-weight: 900;
+    }
+
+    .listTopBar>.number {
+      width: 10%;
+    }
+
+    .listTopBar>.title {
+      width: 65%;
+    }
+
+    .listTopBar>.date {
+      width: 20%;
+    }
+
+    .listTopBar>.like {
+      width: 5%;
+    }
+
+    /* -------newList-------------------------------------------------- */
+    .newList {
+      color: white;
+      background-color: #ffffff6c;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+    }
+
+    .newList:hover {
+      background-color: rgba(128, 128, 128, 0.426);
+      cursor: pointer;
+    }
+
+    .newList>.selectPost {
+      width: 10%;
+    }
+
+    .newList>.newTitle {
+      width: 65%;
+    }
+
+    .newList>.newTitle:hover {
+      text-decoration: underline double;
+    }
+
+    .newList>.newDate {
+      width: 20%;
+    }
+
+    .newList>.newLike {
+      width: 5%;
+    }
+
+    /* ---------------------------------------------------------------------------------- */
+
+    .view {
+      display: flex;
+      width: 100%;
+      height: 110vh;
+      justify-content: flex-end;
+      /* overflow: auto; */
+    }
+
+    .mobile-view {
+      align-items: center;
+      border: none;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      /* overflow: auto; */
+      width: 100%;
+    }
+
+    .wrap {
+      height: 690px;
+      position: relative;
+      width: 320px;
+    }
+
+    .wrap::before {
+      content: "";
+      background-color: #fff;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      display: inline-block;
+      height: 62px;
+      width: 100%;
+      border-radius: 46px 46px 0 0;
+      margin-bottom: -3px;
+    }
+
+    .wrap::after {
+      content: "";
+      background-color: #fff;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      display: inline-block;
+      height: 62px;
+      width: 100%;
+      border-radius: 0px 0px 46px 46px;
+      margin-top: 3px;
+    }
+
+    .before-line {
+      background-color: #eff1f2;
+      border-radius: 1.5px;
+      height: 3px;
+      left: 50%;
+      position: absolute;
+      top: 23px;
+      transform: translateX(-50%) translateY(-50%);
+      width: 24px;
+    }
+
+    .main-view {
+      align-items: center;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      height: 556px;
+      max-height: 566px;
+      width: 320px;
+      border: none;
+      background: linear-gradient(#141e30, #243b55);
+    }
+
+    /* ------------footer---------------------------------------------------- */
+
+    /* footer */
+    footer .inner {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 70px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      /* justify-content: center; */
+      align-items: center;
+      font-size: 12px;
+      background-color: rgb(222, 222, 222, 0.8);
+    }
+
+    footer .inner ul {
+      text-align: center;
+      list-style: none;
+    }
+
+    .header {
+      position: absolute;
+      text-align: center;
+      background: linear-gradient(60deg, rgb(0, 0, 0) 0%, rgb(209, 209, 209) 100%);
+      color: white;
+      width: 100%;
+      height: 110vh;
+    }
+
+    .logo {
+      width: 50px;
+      fill: white;
+      padding-right: 15px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .inner-header {
+      height: 65vh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .flex {
+      /*Flexbox for containers*/
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20vh;
+      margin-bottom: -2px;
+      /*Fix for safari gap*/
+      min-height: 150px;
+      max-height: 300px;
+    }
+
+    .content {
+      position: relative;
+      height: 20vh;
+      text-align: center;
+      background-color: white;
+    }
+
+    /* Animation */
+    .parallax>use {
+      animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+    }
+
+    .parallax>use:nth-child(1) {
+      animation-delay: -2s;
+      animation-duration: 7s;
+    }
+
+    .parallax>use:nth-child(2) {
+      animation-delay: -3s;
+      animation-duration: 10s;
+    }
+
+    .parallax>use:nth-child(3) {
+      animation-delay: -4s;
+      animation-duration: 13s;
+    }
+
+    .parallax>use:nth-child(4) {
+      animation-delay: -5s;
+      animation-duration: 20s;
+    }
+
+    @keyframes move-forever {
+      0% {
+        transform: translate3d(-90px, 0, 0);
+      }
+
+      100% {
+        transform: translate3d(85px, 0, 0);
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <!--Hey! This is the original version
+of Simple CSS Waves-->
+  <div class="header">
+    <!--Content before waves-->
+    <div class="inner-header flex">
+    </div>
+    <!--Waves Container-->
+    <div>
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 180 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+      </svg>
+    </div>
+    <!--Waves end-->
+  </div>
+  <!--Header ends-->
+  <!--Content starts-->
+  <!--Content ends-->
+  <div class="view">
+    <div class="mobile-view">
+      <div class="wrap">
+        <div class="before-line"></div>
+        <div class="main-view">
+          <!-- ---------------수정, 삭제 버튼---------------------------------------------------------->
+          <div class="changeButton">
+            <div></div>
+            <div class="myPostFont">
+              <i class="fa-solid fa-user" style="color: #ffffff"></i>&nbsp; MY
+              POST
+            </div>
+
+            <div class="changeIcon">
+              <div class="correctionButton">
+                <i id="correctionButton" class="fa-solid fa-pen-to-square fa-lg" style="color: #ffffff"
+                  onclick="clickCorrectionButton()"></i>
+              </div>
+              &nbsp;
+              <div class="deleteButton">
+                <i id="deleteButton" class="fa-solid fa-trash-can fa-lg" style="color: #ffffff"
+                  onclick="clickDeleteButton()"></i>
+              </div>
+            </div>
+          </div>
+          <hr />
+
+          <!-- ---------------main---------------------------------------------------------->
+          <div class="listContainer">
+            <div class="listTopBar">
+              <div class="number"></div>
+              <div class="title">TITLE</div>
+              <div class="date">DATE</div>
+              <div class="like">LIKE</div>
+            </div>
+
+            <!-- 내 게시물만 가져오기 -->
+            <% for (let i=0; i < myPostData.length; i++) { %>
+              <div class="newList">
+                <form name="selectPost">
+                  <div class="selectPost" id="selectPost-<%= myPostData[i].post_id%>">
+                    <input type="checkbox" id="selectPost-<%= myPostData[i].post_id%>" />
+                  </div>
+                </form>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="newTitle" id="newTitle-<%= myPostData[i].post_id%>" onclick="showPost(this)">
+                  <%= myPostData[i].title%>
+                </div>
+                <div class="newDate">
+                  <%= myPostData[i].created_date.toISOString().split('T')[0] %>
+                    &nbsp; <% const timeParts=myPostData[i].created_time.split(':'); %>
+                      <%= timeParts[0] %>:<%= timeParts[1] %>
+                </div>
+                <div class="newLike">
+                  <%= myPostData[i].like_count%>
+                </div>
+              </div>
+              <%}%>
+          </div>
+
+          <footer>
+            <div class="inner">
+              <a href="http://localhost:3000/index3">
+                <ul class="home">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-sharp fa-solid fa-house" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Home</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8000/">
+                <ul class="community">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-clipboard" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Bord</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8005/">
+                <ul class="community-chat">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-comment" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Chat</div>
+                </ul>
+              </a>
+              <a href="#">
+                <ul class="setting">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-user" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">MyPage</div>
+                </ul>
+              </a>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const correctionButton = document.querySelector("#correctionButton");
+  const deleteButton = document.querySelector("#deleteButton");
+  let checkedCheckboxes = [];
+  let arrPostId = [];
+  let postId;
+
+  function showPost(element) {
+    const postId = element.id.split("-")[1];
+    window.location.href = `/list/showPost?postId=${postId}`;
+  }
+
+  function CheckedCheckboxes() {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function (checkbox) {
+      postId = checkbox.id.split("-")[1];
+      if (checkbox.checked) {
+        checkedCheckboxes.push(checkbox);
+        arrPostId.push(parseInt(postId));
+      } else {
+        var index = arrPostId.indexOf(parseInt(postId));
+        if (index > -1) {
+          arrPostId.splice(index, 1);
+        }
+      }
+    });
+  }
+
+  // 게시물 수정
+  function clickCorrectionButton() {
+    CheckedCheckboxes();
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var postIds = []; // 체크된 태그의 ID들을 담을 배열
+    checkboxes.forEach(function (checkbox) {
+      if (checkbox.checked) {
+        var postId = checkbox.id.split("-")[1];
+        postIds.push(postId); // 체크된 태그의 ID를 배열에 추가
+      }
+    });
+    if (checkedCheckboxes.length === 0) {
+      alert("수정할 게시물을 체크해 주세요");
+    } else if (checkedCheckboxes.length !== 1) {
+      alert("하나의 게시글만 체크해 주세요");
+      checkedCheckboxes.forEach((element) => {
+        element.checked = false;
+      });
+      checkedCheckboxes = [];
+    } else {
+      const signinId = "<%= signinId %>";
+      const postId = postIds[0]; // 체크된 태그의 ID 배열의 첫 번째 값
+      window.location.href = `/myPost/edit?post_id=${postId}&signinId=${signinId}`;
+    }
+  }
+
+  // 게시물 삭제
+  function clickDeleteButton() {
+    CheckedCheckboxes();
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function (checkbox) {
+      postId = checkbox.id.split("-")[1];
+    });
+    if (checkedCheckboxes.length === 0) {
+      alert("삭제할 게시물을 체크해 주세요");
+    } else {
+      const signin_id = "<%= signinId %>";
+      axios({
+        method: "DELETE",
+        url: "/myPost/del",
+        data: {
+          // 삭제할 post_id
+          post_id: arrPostId,
+          signin_id: signin_id,
+        },
+      }).then((res) => {
+        if (res.data.result) {
+          alert("삭제완료");
+          const signinId = "<%= signinId %>";
+          window.location.href = `/myPost?signinId=${signinId}`;
+        }
+      });
+    }
+  }
+</script>
+
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://kit.fontawesome.com/693f483c38.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <title>Document</title>
+</head>
+<style>
+  /* -------- ---------------------------------------------- */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Nanum Gothic", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #333;
+    background-color: #e1eaea;
+  }
+
+  /* --------게시물 추가--------------------------------------------------- */
+  .postAll {
+    /* 폰트 지정하기  */
+  }
+
+  .postWriteFont {
+    font-size: large;
+    font-weight: bolder;
+    color: white;
+    display: flex;
+    justify-content: center;
+    padding-top: 2vw;
+    padding-bottom: 2vw;
+  }
+
+  /* 게시글 추가의 top bar */
+  .bordTopbar {
+    background-color: #263b54;
+    margin-top: 2vw;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    height: 5vh;
+    color: white;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .userIcon {
+    margin-left: 10px;
+  }
+
+  .userContainer {
+    display: flex;
+    align-items: center;
+  }
+
+  .bordInput {
+    background-color: #ffffff6c;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    height: 300px;
+    color: white;
+
+    align-items: center;
+  }
+
+  .bordTitle {
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+
+  .titleFont {
+    display: flex;
+    justify-content: center;
+    font-weight: bolder;
+    padding-top: 1vw;
+    color: #141e30;
+  }
+
+  .inputTitle {
+    resize: none;
+    width: 100%;
+  }
+
+  .bordContent {
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+
+  .contentFont {
+    display: flex;
+    justify-content: center;
+    font-weight: bolder;
+    color: #141e30;
+  }
+
+  .inputContent {
+    resize: none;
+    width: 100%;
+    height: 170px;
+  }
+
+  /* 게시 버튼 (upload)*/
+  .postUploadBox {
+    margin-left: 2vw;
+    margin-right: 2vw;
+    background-color: #141e30;
+    display: flex;
+    justify-content: flex-end;
+    /* 변경: 오른쪽 정렬 */
+    align-items: flex-start;
+  }
+
+  .postUpload {
+    background-color: white;
+    color: #141e30;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 5px;
+    /* border: none; */
+    font-weight: bolder;
+  }
+
+  .postUpload:hover {
+    cursor: pointer;
+    background-color: #2b2a42;
+    color: white;
+  }
+
+  /* ------------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------------------- */
+
+  .view {
+    display: flex;
+    width: 100%;
+    height: 110vh;
+    justify-content: flex-end;
+    /* overflow: auto; */
+  }
+
+  .mobile-view {
+    align-items: center;
+    border: none;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    /* overflow: auto; */
+    width: 100%;
+  }
+
+  .wrap {
+    height: 690px;
+    position: relative;
+    width: 320px;
+  }
+
+  .wrap::before {
+    content: "";
+    background-color: #fff;
+    box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    height: 62px;
+    width: 100%;
+    border-radius: 46px 46px 0 0;
+    margin-bottom: -3px;
+  }
+
+  .wrap::after {
+    content: "";
+    background-color: #fff;
+    box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    height: 62px;
+    width: 100%;
+    border-radius: 0px 0px 46px 46px;
+    margin-top: 3px;
+  }
+
+  .before-line {
+    background-color: #eff1f2;
+    border-radius: 1.5px;
+    height: 3px;
+    left: 50%;
+    position: absolute;
+    top: 23px;
+    transform: translateX(-50%) translateY(-50%);
+    width: 24px;
+  }
+
+  .main-view {
+    align-items: center;
+    box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+    height: 556px;
+    max-height: 566px;
+    width: 320px;
+    border: none;
+    background: linear-gradient(#141e30, #243b55);
+  }
+
+  /* ------------footer---------------------------------------------------- */
+
+  /* footer */
+  footer .inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 70px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    /* justify-content: center; */
+    align-items: center;
+    font-size: 12px;
+    background-color: rgb(222, 222, 222, 0.8);
+  }
+
+  footer .inner ul {
+    text-align: center;
+    list-style: none;
+  }
+
+  .header {
+    position: absolute;
+    text-align: center;
+    background: linear-gradient(60deg, rgb(0, 0, 0) 0%, rgb(209, 209, 209) 100%);
+    color: white;
+    width: 100%;
+    height: 110vh;
+  }
+
+  .logo {
+    width: 50px;
+    fill: white;
+    padding-right: 15px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .inner-header {
+    height: 65vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .flex {
+    /*Flexbox for containers*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20vh;
+    margin-bottom: -2px;
+    /*Fix for safari gap*/
+    min-height: 150px;
+    max-height: 300px;
+  }
+
+  .content {
+    position: relative;
+    height: 20vh;
+    text-align: center;
+    background-color: white;
+  }
+
+  /* Animation */
+  .parallax>use {
+    animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+  }
+
+  .parallax>use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+  }
+
+  .parallax>use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+  }
+
+  .parallax>use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+  }
+
+  .parallax>use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+  }
+
+  @keyframes move-forever {
+    0% {
+      transform: translate3d(-90px, 0, 0);
+    }
+
+    100% {
+      transform: translate3d(85px, 0, 0);
+    }
+  }
+</style>
+
+<body>
+  <!--Hey! This is the original version
+of Simple CSS Waves-->
+  <div class="header">
+    <!--Content before waves-->
+    <div class="inner-header flex">
+    </div>
+    <!--Waves Container-->
+    <div>
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 180 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+      </svg>
+    </div>
+    <!--Waves end-->
+  </div>
+  <!--Header ends-->
+  <!--Content starts-->
+  <!--Content ends-->
+  <div class="view">
+    <div class="mobile-view">
+      <div class="wrap">
+        <div class="before-line"></div>
+        <div class="main-view">
+          <!-- 게시물 & 입력창 -->
+          <div class="postAll">
+            <div class="postWriteFont">Post Write</div>
+            <hr />
+            <!-- "쓰기"를 눌렀을 때 나오는 창 -->
+            <form name="bord">
+              <div class="writeBord">
+                <!-- 게시물 쓰기 창의 topbar -->
+                <div class="bordTopbar">
+                  <div class="userContainer">
+                    <div class="userIcon">
+                      <i class="fa-solid fa-user fa-regular" style="color: #ffff"></i>
+                    </div>
+                    <div class="userId">
+                      &nbsp;&nbsp;user : <%= signinUser[0].signin_id%>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- title, content의 input창  -->
+                <div class="bordInput">
+                  <div class="bordTitle">
+                    <div class="titleFont">TITLE</div>
+                    <textarea class="inputTitle" id="inputTitle" name="inputTitle" placeholder="Title"></textarea>
+                  </div>
+
+                  <br />
+                  <div class="bordContent">
+                    <div class="contentFont">CONTENTS</div>
+                    <textarea class="inputContent" id="inputContent" name="inputContent"
+                      placeholder="Write Here ... "></textarea>
+                  </div>
+                </div>
+
+                <div class="postUploadBox">
+                  <button type="button" class="postUpload" onclick="postUpload()">
+                    POST
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <footer>
+            <div class="inner">
+              <a href="http://localhost:3000/index3">
+                <ul class="home">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-sharp fa-solid fa-house" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Home</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8000/">
+                <ul class="community">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-clipboard" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Bord</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8005/">
+                <ul class="community-chat">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-comment" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Chat</div>
+                </ul>
+              </a>
+              <a href="#">
+                <ul class="setting">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-user" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">MyPage</div>
+                </ul>
+              </a>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const bord = document.forms["bord"];
+
+  //게시 눌렀을 경우
+  function postUpload() {
+    if (inputTitle.value == "" || inputContent.value == "") {
+      alert("모든 값을 입력하세요");
+      return;
+    } else {
+      //게시 눌렀을 경우 axios 사용해서 input에 입력된 내용들을 model로 보내야함(글 작성 칸에 있는 value값 다 없애버리기)
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1;
+      const day = today.getDate();
+      const created_date = `${year}-${month}-${day}`;
+
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      created_time = `${hours}:${minutes}`;
+
+      const writeData = {
+        user_id: "<%= signinUser[0].signin_id%>",
+        title: bord.inputTitle.value,
+        content: bord.inputContent.value,
+        created_date: created_date,
+        created_time: created_time,
+        like_count: 0,
+      };
+      axios({
+        method: "POST",
+        url: "/write",
+        data: writeData,
+      });
+      alert("게시글 업로드");
+      window.location.href = "/";
+      //버튼 눌리면 input태그 비워주기
+      bord.inputTitle.value = "";
+      bord.inputContent.value = "";
+    }
+  }
+</script>
+
+</html>

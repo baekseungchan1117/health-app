@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://kit.fontawesome.com/693f483c38.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Nanum Gothic", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #333;
+      background-color: #e1eaea;
+    }
+
+    /* ----------고정 상단바 ---------------------------------------------- */
+
+    .buttonBar {
+      color: black;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 0.1vw;
+      height: 3vw;
+      padding: 3vw 1vw 3vw 1vw;
+    }
+
+    .buttonBar>.mypost,
+    .buttonBar>.write,
+    .buttonBar>.list {
+      padding: 0.3vw;
+      width: 90%;
+      cursor: pointer;
+      font-weight: bolder;
+      color: rgb(255, 255, 255);
+    }
+
+    .buttonBar>.search {
+      padding: 0.1vw;
+      width: 70%;
+      display: flex;
+    }
+
+    .buttonBar>.mypost:hover,
+    .buttonBar>.write:hover,
+    .buttonBar>.list:hover {
+      background-color: #67629f;
+      color: white;
+      /* color: black; */
+    }
+
+    /* ------------------------------------------------------------------------------------- */
+
+    .allPostButton {
+      margin-bottom: 10px;
+      margin-right: 10px;
+      display: flex;
+      justify-content: flex-end;
+      color: white;
+    }
+
+    .allPostButton:hover {
+      color: gray;
+      cursor: pointer;
+    }
+
+    /* 게시글의 top bar ! margin-top으로 게시물 사이 간격 조정하기 */
+
+    .bordTopbar {
+      background-color: #263b54;
+      margin-top: 3vh;
+      margin-left: 4vw;
+      margin-right: 2vw;
+      height: 4vh;
+      color: white;
+      border-bottom: 1px solid black;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      border: 1px solid white;
+    }
+
+    .userContainer {
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    /* 게시글의 내용  */
+    .bordContent {
+      /* background-color: rgb(225, 128, 225); */
+      margin-left: 4vw;
+      margin-right: 2vw;
+      color: white;
+      font-size: 15px;
+    }
+
+    .bordContentTitle {
+      background-color: #f5f5dc;
+      border: 1px solid #545082;
+      color: #141e30;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bolder;
+    }
+
+    .bordContentContent {
+      background-color: #ffffff6c;
+      border: 1px solid #545082;
+      color: #141e30;
+      display: flex;
+      justify-content: center;
+      margin: 0px;
+      padding: 20px;
+    }
+
+    .denoteTitle {
+      display: flex;
+      justify-content: center;
+    }
+
+    .denoteContent {
+      display: flex;
+      justify-content: center;
+    }
+
+    .contain {
+      width: 300px;
+      height: 400px;
+      overflow: auto;
+    }
+
+    .contain::-webkit-scrollbar {
+      width: 0.5em;
+      /* 스크롤바의 너비 */
+    }
+
+    .contain::-webkit-scrollbar-track {
+      background: transparent;
+      /* 스크롤바 트랙의 배경색 */
+    }
+
+    .contain::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      /* 스크롤바 썸의 배경색 */
+    }
+
+    /* ---------------------------------------------------------------------------------- */
+
+    .view {
+      display: flex;
+      width: 100%;
+      height: 110vh;
+      justify-content: flex-end;
+      /* overflow: auto; */
+    }
+
+    .mobile-view {
+      align-items: center;
+      border: none;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      /* overflow: auto; */
+      width: 100%;
+    }
+
+    .wrap {
+      height: 690px;
+      position: relative;
+      width: 320px;
+    }
+
+    .wrap::before {
+      content: "";
+      background-color: #fff;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      display: inline-block;
+      height: 62px;
+      width: 100%;
+      border-radius: 46px 46px 0 0;
+      margin-bottom: -3px;
+    }
+
+    .wrap::after {
+      content: "";
+      background-color: #fff;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      display: inline-block;
+      height: 62px;
+      width: 100%;
+      border-radius: 0px 0px 46px 46px;
+      margin-top: 3px;
+    }
+
+    .before-line {
+      background-color: #eff1f2;
+      border-radius: 1.5px;
+      height: 3px;
+      left: 50%;
+      position: absolute;
+      top: 23px;
+      transform: translateX(-50%) translateY(-50%);
+      width: 24px;
+    }
+
+    .main-view {
+      align-items: center;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      height: 556px;
+      max-height: 566px;
+      width: 320px;
+
+      border: none;
+      background: linear-gradient(#141e30, #243b55);
+    }
+
+    /* ------------footer---------------------------------------------------- */
+
+    /* footer */
+    footer .inner {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 70px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      /* justify-content: center; */
+      align-items: center;
+      font-size: 12px;
+      background-color: rgb(222, 222, 222, 0.8);
+    }
+
+    footer .inner ul {
+      text-align: center;
+      list-style: none;
+    }
+
+    .header {
+      position: absolute;
+      text-align: center;
+      background: linear-gradient(60deg, rgb(0, 0, 0) 0%, rgb(209, 209, 209) 100%);
+      color: white;
+      width: 100%;
+      height: 110vh;
+    }
+
+    .logo {
+      width: 50px;
+      fill: white;
+      padding-right: 15px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .inner-header {
+      height: 65vh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .flex {
+      /*Flexbox for containers*/
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20vh;
+      margin-bottom: -2px;
+      /*Fix for safari gap*/
+      min-height: 150px;
+      max-height: 300px;
+    }
+
+    .content {
+      position: relative;
+      height: 20vh;
+      text-align: center;
+      background-color: white;
+    }
+
+    /* Animation */
+    .parallax>use {
+      animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+    }
+
+    .parallax>use:nth-child(1) {
+      animation-delay: -2s;
+      animation-duration: 7s;
+    }
+
+    .parallax>use:nth-child(2) {
+      animation-delay: -3s;
+      animation-duration: 10s;
+    }
+
+    .parallax>use:nth-child(3) {
+      animation-delay: -4s;
+      animation-duration: 13s;
+    }
+
+    .parallax>use:nth-child(4) {
+      animation-delay: -5s;
+      animation-duration: 20s;
+    }
+
+    @keyframes move-forever {
+      0% {
+        transform: translate3d(-90px, 0, 0);
+      }
+
+      100% {
+        transform: translate3d(85px, 0, 0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="view">
+    <div class="mobile-view">
+      <div class="wrap">
+        <div class="before-line"></div>
+        <div class="main-view">
+          <div class="buttonBar">
+            <div class="mypost" onclick="mypostButton()">MYPOST</div>
+            <div class="write" onclick="writeButton()">WRITE</div>
+            <div class="list" onclick="listButton()">LIST</div>
+            <div class="search">
+              <input type="text" class="search" id="search" name="search" autocomplete="off" />
+              <button id="searchButton" onclick="search()" style="background-color: #67629f">
+                <i class="fa-solid fa-magnifying-glass fa-lg" style="color: #ffffff"></i>
+              </button>
+            </div>
+          </div>
+
+          <div onclick="allPost()" class="allPostButton">전체 게시물</div>
+
+          <div class="contain">
+            <% if (searchData.length===0) { %>
+              <div class="noPosts">게시물이 없습니다.</div>
+              <% } else { %>
+                <% for (let i=0; i < searchData.length; i++) { %>
+                  <!-- 게시물을 띄우는 창 -->
+
+                  <div class="postBordContainer">
+                    <div class="postBord">
+                      <!-- 게시물 쓰기 창의 topbar -->
+                      <div class="bordTopbar">
+                        <div class="userContainer">
+                          <div class="userIcon">
+                            &nbsp;&nbsp;<i class="fa-solid fa-user fa-sm" style="color: #ffff"></i>
+                          </div>
+                          <div class="userId">
+                            &nbsp;<%= searchData[i].user_id %>
+                          </div>
+                        </div>
+                        <div class="timeNow">
+                          <%= searchData[i].created_date.toISOString().split('T')[0] %>
+                            <% const timeParts=searchData[i].created_time.split(':'); %>
+                              <%= timeParts[0] %>:<%= timeParts[1] %>&nbsp;&nbsp;
+                        </div>
+                      </div>
+
+                      <div class="bordContent">
+                        <div class="bordContentTitle">
+                          <%= searchData[i].title %><br />
+                        </div>
+                        <div class="bordContentContent">
+                          <%= searchData[i].content %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <%}%>
+                    <%}%>
+          </div>
+
+          <footer>
+            <div class="inner">
+              <a href="http://localhost:3000/index3">
+                <ul class="home">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-sharp fa-solid fa-house" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Home</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8000/">
+                <ul class="community">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-clipboard" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Bord</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8005/">
+                <ul class="community-chat">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-comment" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Chat</div>
+                </ul>
+              </a>
+              <a href="#">
+                <ul class="setting">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-user" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">MyPage</div>
+                </ul>
+              </a>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  alert("<%= searchInput %>의 검색 결과 입니다.");
+  const postBord = document.querySelector(".postBord");
+  const write = document.querySelector(".write");
+  const list = document.querySelector(".list");
+  const writeBord = document.querySelector(".writeBord");
+  //localhost:8000/write
+  function writeButton() {
+    window.location.href = "/write";
+  }
+  //localhost:8000/list
+  function listButton() {
+    window.location.href = "/list";
+  }
+
+  //localhost:8000/search
+  function search() {
+    //검색 눌렀을 경우 데이터 베이스에서 일치하는 단어 있는 쿼리문 가져오기
+    const searchInput = document.getElementById("search");
+    if (!searchInput.value) {
+      alert("검색어를 입력하세요");
+    } else {
+      window.location.href = `/search?searchInput=${searchInput.value}`;
+    }
+  }
+
+  function allPost() {
+    window.location.href = `/`;
+  }
+</script>
+
+</html>

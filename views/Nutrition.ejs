@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <title>FitTrack</title>
+  <script src="https://kit.fontawesome.com/693f483c38.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <!--axios-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!--파비콘-->
+  <!--<link rel="shortcut icon" href="favicon.ico" />-->
+  <link rel="icon" href="./favicon.png" />
+  <!--브라우저 스타일 초기화-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css" />
+  <!--Google Fonts - 나눔고딕-->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet" />
+  <!--Google Material Icons-->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+  <link rel="stylesheet" href="./css/main.css" />
+  <link rel="stylesheet" href="./css/Nutrition.css" />
+
+  <!--GSAP & ScrollToPlugin-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"
+    integrity="sha512-IQLehpLoVS4fNzl7IfH8Iowfm5+RiMGtHykgZJl9AWMgqx0AmJ6cRWcB+GaGVtIsnC4voMfm8f2vwtY+6oPjpQ=="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/ScrollToPlugin.min.js"
+    integrity="sha512-nTHzMQK7lwWt8nL4KF6DhwLHluv6dVq/hNnj2PBN0xMl2KaMm1PM02csx57mmToPAodHmPsipoERRNn4pG7f+Q=="
+    crossorigin="anonymous"></script>
+
+  <!--Swiper-->
+  <link rel="stylesheet" href="https://unpkg.com/swiper@6.8.4/swiper-bundle.min.css" />
+  <script src="https://unpkg.com/swiper@6.8.4/swiper-bundle.min.js"></script>
+  <!--ScrollMagic-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+
+  <script defer src="./js/main.js"></script>
+
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3e8d530572b469cd48ffa7479b0a18a1&libraries=services,clusterer,drawing"></script>
+</head>
+
+<body>
+  <div class="view">
+    <div class="mobile-view">
+      <div class="wrap">
+        <div class="before-line"></div>
+        <div class="main-view">
+          <section name="searchResult">
+            <div>
+              <header class="Nt_head display_flex_center">
+                <div class="search_div display_flex_center">
+                  <div class="display_flex_center">
+                    <button type="button" class="Nu_button" onclick="onloadeat()">
+                      <span class="material-symbols-outlined">
+                        lunch_dining
+                      </span>
+                      <p>추가</p>
+                    </button>
+                  </div>
+                  <div class="display_flex_center">
+                    <button type="button" class="Nu_button" onclick="onloadset()">
+                      <span class="material-symbols-outlined"> flag </span>
+                      <p>목표설정</p>
+                    </button>
+                  </div>
+                </div>
+              </header>
+
+              <div id="searchResultTable">
+                <% if (DBdata.length==0 ) { %>
+                  <div class="noresult display_flex_center">기록이 없습니다</div>
+                  <%}%>
+                    <% for(let i=0; i< DBdata.length; i++) {%>
+                      <ul id="eats<%= DBdata[i].dataValues.id %>" class="display_flex_around">
+                        <div>
+                          <span class="material-symbols-outlined">
+                            restaurant_menu
+                          </span>
+                        </div>
+                        <div class="result_table">
+                          <div>
+                            <li>
+                              <%= DBdata[i].dataValues.foodName %>
+                            </li>
+                          </div>
+                          <ul>
+                            <li>
+                              <%= DBdata[i].dataValues.HowManyEat %>g
+                            </li>
+                            <li>
+                              <%= DBdata[i].dataValues.HowManyKcal %>kcal
+                            </li>
+                            <li>
+                              <%= DBdata[i].dataValues.HowManyProtein %>Protein
+                            </li>
+                          </ul>
+                        </div>
+                        <li class="go display_flex_center">
+                          <button type="button" onclick="deleats(`<%= DBdata[i].dataValues.id %>`)">
+                            <span class="material-symbols-outlined">
+                              delete
+                            </span>
+                          </button>
+                        </li>
+                      </ul>
+                      <%}%>
+              </div>
+              <div id="calGoals" class="display_flex_center">
+                <% if(goalsValue !==null){ %>
+                  <% if(goalsValue.Kcal !=='0' && goalsValue.Protein !=='0' ){ %>
+                    <div class="display_flex_around">
+                      <div class="calGoalswidth display_flex_center">
+                        <span class="material-symbols-outlined">
+                          directions_run
+                        </span>
+                        목표까지
+                      </div>
+                      <div class="widthset">
+                        <%= goalsValue.Kcal-NutritionTotal.KcalResult %> Kcal
+                      </div>
+                    </div>
+                    <div class="display_flex_around">
+                      <div class="calGoalswidth display_flex_center">
+                        <span class="material-symbols-outlined">
+                          directions_run
+                        </span>
+                        목표까지
+                      </div>
+                      <div class="widthset">
+                        <%= goalsValue.Protein-NutritionTotal.ProteinResult %> g
+                      </div>
+                    </div>
+                    <% } %>
+                      <% } %>
+                        <% if(goalsValue==null){ %>
+                          <div>목표 칼로리 또는 단백질량을 설정해주세요 !</div>
+                          <% } %>
+                            <% if(goalsValue !==null){ %>
+                              <% if(goalsValue.Kcal==0 || goalsValue.Protein==0){ %>
+                                <div>목표 칼로리 또는 단백질량을 설정해주세요 !</div>
+                                <% } %>
+                                  <% } %>
+              </div>
+
+          </section>
+
+          <footer>
+            <div class="inner">
+              <a href="http://localhost:3000/index3">
+                <ul class="home">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-sharp fa-solid fa-house" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Home</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8000/">
+                <ul class="community">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-clipboard" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Bord</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8005/">
+                <ul class="community-chat">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-comment" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Chat</div>
+                </ul>
+              </a>
+              <a href="#">
+                <ul class="setting">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-user" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">MyPage</div>
+                </ul>
+              </a>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function reactiveModifyTodayGoals() {
+      const calGoalsDiv = document.getElementById("calGoals");
+
+      axios({
+        method: "GET",
+        url: "/exam/reactiveModifyTodayGoals",
+      })
+        .then((res) => {
+          return res.data;
+        })
+        .then((data) => {
+          calGoalsDiv.innerHTML = `
+            <div class="display_flex_around">
+              <div class="calGoalswidth display_flex_center">
+                <span class="material-symbols-outlined">
+                      directions_run
+                </span>
+                목표까지 
+              </div>
+              <div class="widthset">
+              ${data.toTargetKcal} Kcal
+              </div>
+            </div>
+            <div class="display_flex_around">
+              <div class="calGoalswidth display_flex_center">
+                <span class="material-symbols-outlined">
+                      directions_run
+                </span>
+                목표까지
+              </div> 
+              <div class="widthset">
+              ${data.toTargetProtein} g
+              </div>
+            </div>
+                `;
+        });
+    }
+
+    function searchResult() {
+      const mainForm = document.forms["mainForm"];
+      const searchResultTable = document.querySelector("#searchResultTable");
+
+      if (
+        mainForm.whatFoodeat.value == "" ||
+        mainForm.howManyEat.value == ""
+      ) {
+        alert("음식명 또는 섭취량을 입력해주세요");
+        return;
+      }
+      axios({
+        method: "POST",
+        url: "/exam/searchResult",
+        data: {
+          whatFoodeat: mainForm.whatFoodeat.value,
+          howManyEat: mainForm.howManyEat.value,
+        },
+      })
+        .then((res) => {
+          return res.data;
+        })
+        .then((data) => {
+          if (document.querySelector(".noresult")) {
+            document.querySelector(".noresult").remove();
+          }
+          const inTableHtml = `
+                  <ul id="eats${data.id}" class="display_flex_around">
+                    <div>
+                    <span class="material-symbols-outlined">
+                      restaurant_menu
+                    </span>
+                  </div>
+                  <div class="result_table">
+                    <div>
+                      <li>${data.searchResult.foodName}</li>
+                    </div>
+                    <ul>
+                      <li>${mainForm.howManyEat.value}g</li>
+                      <li>${data.searchResult.Kcal}kca,</li>
+                      <li>${data.searchResult.Protein}Protein</li>
+                    </ul>
+                    </div>
+                    <li class="go display_flex_center">
+                    <button
+                      type="button"
+                      onclick="deleats(${data.id})"
+                    >
+                    <span class="material-symbols-outlined">
+                      delete
+                      </span>
+                    </button>
+                  </li>
+                  </ul>
+                `;
+          searchResultTable.insertAdjacentHTML("beforeend", inTableHtml);
+          document.querySelector(".search_div").innerHTML = `
+            <div class="display_flex_center">
+                      <button
+                        type="button"
+                        class="Nu_button"
+                        onclick="onloadeat()"
+                      >
+                        <span class="material-symbols-outlined">
+                          lunch_dining
+                        </span>
+                        <p>추가</p>
+                      </button>
+                    </div>
+                    <div class="display_flex_center">
+                      <button type="button" class="Nu_button">
+                        <span class="material-symbols-outlined"> flag </span>
+                        <p>목표설정</p>
+                      </button>
+                    </div>
+            `;
+          reactiveModifyTodayGoals();
+        });
+    }
+
+    function modifyGoals() {
+      const goalTodayForm = document.forms["goalTodayForm"];
+
+      if (
+        goalTodayForm.targetKcal.value == "" ||
+        goalTodayForm.targetProtein.value == ""
+      ) {
+        alert("목표 단백질 혹은 칼로리를 설정하여주세요");
+        return;
+      }
+      axios({
+        method: "POST",
+        url: "/exam/modifyGoals",
+        data: {
+          targetKcal: goalTodayForm.targetKcal.value,
+          targetProtein: goalTodayForm.targetProtein.value,
+        },
+      })
+        .then((res) => {
+          return res.data;
+        })
+        .then((data) => {
+          document.querySelector(".search_div").innerHTML = `
+            <div class="display_flex_center">
+                      <button
+                        type="button"
+                        class="Nu_button"
+                        onclick="onloadeat()"
+                      >
+                        <span class="material-symbols-outlined">
+                          lunch_dining
+                        </span>
+                        <p>추가</p>
+                      </button>
+                    </div>
+                    <div class="display_flex_center">
+                      <button type="button" class="Nu_button">
+                        <span class="material-symbols-outlined"> flag </span>
+                        <p>목표설정</p>
+                      </button>
+                    </div>
+            `;
+          reactiveModifyTodayGoals();
+        });
+    }
+
+
+
+    function deleats(eleId) {
+      if (!confirm("삭제?")) {
+        return;
+      }
+
+      axios({
+        method: "DELETE",
+        url: "/exam/delEats",
+        data: {
+          id: Number(eleId),
+        },
+      })
+        .then((res) => {
+          return res.data;
+        })
+        .then((data) => {
+          document.querySelector(`#eats${eleId}`).remove();
+          reactiveModifyTodayGoals();
+        });
+    }
+
+    function onloadeat() {
+      document.querySelector(".search_div").innerHTML = `
+        <form
+                    name="mainForm"
+                    id="mainForm"
+                    class="display_flex_around"
+                  >
+        <div class="eatfoodForm">
+                      <div class="display_flex_around">
+                        <p>
+                          <label for="whatFoodeat">먹은음식 </label>
+                        </p>
+                        <input
+                          type="text"
+                          id="whatFoodeat"
+                          name="whatFoodeat"
+                        />
+                      </div>
+                      <div class="display_flex_around">
+                        <p>
+                          <label for="howManyEat">섭취량(g) </label>
+                        </p>
+                        <input type="text" id="howManyEat" name="howManyEat" />
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        onclick="searchResult()"
+                        class="submit_button display_flex_center"
+                      >
+                        <span class="material-symbols-outlined"> done </span>
+                      </button>
+                    </div>
+                    </form>
+        `;
+    }
+    function onloadset() {
+      document.querySelector(".search_div").innerHTML = `
+        <form
+                    name="goalTodayForm"
+                    id="goalTodayForm"
+                    class="display_flex_around"
+                  >                   <div id="modifyGoalsform" class="eatfoodForm">
+                          <div class="display_flex_around">
+                            <p>
+
+                              <label for="targetKcal">목표칼로리 </label>
+                            </p>
+                            <input type="number" id="targetKcal" />
+                          </div>
+                          <div class="display_flex_around">
+                            <p>
+
+                              <label for="targetProtein">목표단백질 </label>
+                            </p>
+                            <input type="number" id="targetProtein" />
+                          </div>
+                      </div>
+                      <div>
+                        <button
+                          type="button"
+                          class="submit_button display_flex_center"
+                          onclick="modifyGoals()"
+                        >
+                          <span class="material-symbols-outlined"> done </span>
+                        </button>
+                      </div>
+                      </form>
+        `;
+    }
+  </script>
+</body>
+
+</html>

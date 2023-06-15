@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://kit.fontawesome.com/693f483c38.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Nanum Gothic", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #333;
+      background-color: #e1eaea;
+    }
+
+    .container {
+      padding-left: 2vw;
+      padding-right: 2vw;
+    }
+
+    .container>.backBar {
+      display: flex;
+      background-color: rgb(255, 255, 255);
+    }
+
+    .backBar>.backList {
+      padding-left: 2px;
+      display: inline;
+      color: #141e30;
+      font-weight: bolder;
+    }
+
+    .backBar>.backList:hover {
+      cursor: pointer;
+    }
+
+    .titleContainer {
+      background-color: #243b55;
+      color: white;
+      font-weight: bolder;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .topContainer {
+      display: flex;
+      background-color: #f5f5dc;
+      font-size: 12px;
+      border: 1px solid #243b55;
+    }
+
+    .topContainer>.postId {
+      width: 30%;
+    }
+
+    .topContainer>.userId {
+      width: 17%;
+    }
+
+    .topContainer>.date {
+      display: flex;
+      align-items: center;
+      width: 43%;
+    }
+
+    .topContainer>.likeCount {
+      display: flex;
+      align-items: center;
+      width: 10%;
+    }
+
+    .scrollContainer {
+      width: 265px;
+      height: 400px;
+      overflow: auto;
+    }
+
+    .scrollContainer::-webkit-scrollbar {
+      width: 0em;
+      /* 스크롤바의 너비 */
+    }
+
+    .scrollContainer::-webkit-scrollbar-track {
+      background: transparent;
+      /* 스크롤바 트랙의 배경색 */
+    }
+
+    .scrollContainer::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      /* 스크롤바 썸의 배경색 */
+    }
+
+    .constentContainer {
+      /* background-color: rgb(28, 38, 223); */
+      border: 1px solid #141e30;
+      background-color: #ffffff6c;
+    }
+
+    .writeComment {
+      padding: 1vw;
+      border: 1px solid #545082;
+    }
+
+    .constent {
+      color: white;
+      height: 100px;
+      padding-top: 30px;
+      padding-bottom: 100%;
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+
+    /* --------댓글------------------------------------------------------------------- */
+
+    .writeComment {
+      display: flex;
+      align-items: center;
+      resize: none;
+      color: white;
+    }
+
+    .onlyComment {
+      background-color: #67629f35;
+      border: 1px solid #545082;
+      color: white;
+    }
+
+    .bordInputComment {
+      width: 88%;
+      resize: none;
+      /* overflow: hidden; */
+    }
+
+    .showComment {
+      display: flex;
+      align-items: center;
+    }
+
+    /* ---------------------------------------------------------------------------------- */
+
+    .view {
+      display: flex;
+      width: 100%;
+      height: 110vh;
+      justify-content: flex-end;
+      /* overflow: auto; */
+    }
+
+    .mobile-view {
+      align-items: center;
+      border: none;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      /* overflow: auto; */
+      width: 100%;
+    }
+
+    .wrap {
+      height: 690px;
+      position: relative;
+      width: 320px;
+    }
+
+    .wrap::before {
+      content: "";
+      background-color: #fff;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      display: inline-block;
+      height: 62px;
+      width: 100%;
+      border-radius: 46px 46px 0 0;
+      margin-bottom: -3px;
+    }
+
+    .wrap::after {
+      content: "";
+      background-color: #fff;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      display: inline-block;
+      height: 62px;
+      width: 100%;
+      border-radius: 0px 0px 46px 46px;
+      margin-top: 3px;
+    }
+
+    .before-line {
+      background-color: #eff1f2;
+      border-radius: 1.5px;
+      height: 3px;
+      left: 50%;
+      position: absolute;
+      top: 23px;
+      transform: translateX(-50%) translateY(-50%);
+      width: 24px;
+    }
+
+    .main-view {
+      align-items: center;
+      box-shadow: -15px 8px 20px -10px rgba(0, 0, 0, 0.2);
+      height: 556px;
+      max-height: 566px;
+      width: 320px;
+      border: none;
+      background: linear-gradient(#141e30, #243b55);
+    }
+
+    /* ------------footer---------------------------------------------------- */
+
+    /* footer */
+    footer .inner {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 70px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      /* justify-content: center; */
+      align-items: center;
+      font-size: 12px;
+      background-color: rgb(222, 222, 222, 0.8);
+    }
+
+    footer .inner ul {
+      text-align: center;
+      list-style: none;
+    }
+
+    .header {
+      position: absolute;
+      text-align: center;
+      background: linear-gradient(60deg,
+          rgb(0, 0, 0) 0%,
+          rgb(209, 209, 209) 100%);
+      color: white;
+      width: 100%;
+      height: 110vh;
+    }
+
+    .logo {
+      width: 50px;
+      fill: white;
+      padding-right: 15px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .inner-header {
+      height: 65vh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .flex {
+      /*Flexbox for containers*/
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20vh;
+      margin-bottom: -2px;
+      /*Fix for safari gap*/
+      min-height: 150px;
+      max-height: 300px;
+    }
+
+    .content {
+      position: relative;
+      /* height: 20vh; */
+      text-align: center;
+      /* background-color: white; */
+    }
+
+    /* Animation */
+    .parallax>use {
+      animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+    }
+
+    .parallax>use:nth-child(1) {
+      animation-delay: -2s;
+      animation-duration: 7s;
+    }
+
+    .parallax>use:nth-child(2) {
+      animation-delay: -3s;
+      animation-duration: 10s;
+    }
+
+    .parallax>use:nth-child(3) {
+      animation-delay: -4s;
+      animation-duration: 13s;
+    }
+
+    .parallax>use:nth-child(4) {
+      animation-delay: -5s;
+      animation-duration: 20s;
+    }
+
+    @keyframes move-forever {
+      0% {
+        transform: translate3d(-90px, 0, 0);
+      }
+
+      100% {
+        transform: translate3d(85px, 0, 0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!--Hey! This is the original version
+of Simple CSS Waves-->
+  <div class="header">
+    <!--Content before waves-->
+    <div class="inner-header flex"></div>
+    <!--Waves Container-->
+    <div>
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 180 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+      </svg>
+    </div>
+    <!--Waves end-->
+  </div>
+  <!--Header ends-->
+  <!--Content starts-->
+  <!--Content ends-->
+  <div class="view">
+    <div class="mobile-view">
+      <div class="wrap">
+        <div class="before-line"></div>
+        <div class="main-view">
+          <div class="container">
+            <div class="backBar">
+              <div class="backList" onclick="backList()">list</div>
+              <div>&nbsp; > &nbsp;</div>
+              <div>Post</div>
+            </div>
+
+            <div class="titleContainer">
+              <div class="title">
+                <%= showPost[0].title %>
+              </div>
+            </div>
+
+            <div class="topContainer">
+              <div class="postId">
+                <%= showPost[0].post_id %>
+              </div>
+              <div class="userId">
+                <%= showPost[0].user_id %>
+              </div>
+              <div class="date">
+                <%= showPost[0].created_date.toISOString().split('T')[0] %>
+                  &nbsp; <% const timeParts=showPost[0].created_time.split(':'); %>
+                    <%= timeParts[0] %>:<%= timeParts[1] %>
+              </div>
+              <div class="likeCount">
+                <i class="fa-solid fa-heart fa-2xs" style="color: #ff0000"></i>
+                <%= showPost[0].like_count %>
+              </div>
+            </div>
+            <div class="scrollContainer">
+              <div class="constentContainer">
+                <div class="constent">
+                  <%= showPost[0].content %>
+                </div>
+              </div>
+              <hr />
+
+              <div class="commentContainer">
+                <div class="writeComment">
+                  <form name="sendForm" id="sendForm">
+                    <textarea rows="1" cols="50" class="bordInputComment" id="bordInputComment" name="bordInputComment"
+                      placeholder="Comment"></textarea>
+
+                    <!-- 전송버튼 -->
+                    <i class="fa-regular fa-paper-plane fa-lg" style="color: #ffffff" id="sendButton"
+                      onclick="clickSendButton()"></i>
+                  </form>
+                </div>
+                <hr />
+
+                <div class="onlyComment">
+                  <% if(showPostComment.length==0 ){%>
+                    <span>NO COMMENTS</span>
+                    <hr />
+                    <%}%>
+                      <% for (let i=0; i < showPostComment.length; i++) { %>
+                        <div class="showComment">
+                          <i class="fa-solid fa-user fa-regular" style="color: #ffffff"></i>
+                          &nbsp;&nbsp;
+                          <div class="signin_user_id">
+                            <%= showPostComment[i].signin_user_id%>
+                          </div>
+                          <span>&nbsp; : &nbsp;</span>
+                          <div class="content">
+                            <%= showPostComment[i].content%>
+                          </div>
+                        </div>
+                        <br />
+                        <hr />
+                        <%}%>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <footer>
+            <div class="inner">
+              <a href="http://localhost:3000/index3">
+                <ul class="home">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-sharp fa-solid fa-house" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Home</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8000/">
+                <ul class="community">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-clipboard" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Bord</div>
+                </ul>
+              </a>
+              <a href="http://localhost:8005/">
+                <ul class="community-chat">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-comment" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">Chat</div>
+                </ul>
+              </a>
+              <a href="#">
+                <ul class="setting">
+                  <span class="material-symbols-outlined">
+                    <i class="fa-solid fa-user" style="color: #000000"></i>
+                  </span>
+                  <div style="color: #000000;">MyPage</div>
+                </ul>
+              </a>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  function backList() {
+    window.location.href = "/list";
+  }
+
+  //전송 클릭했을 경우 데이터베이스에 댓글 저장, 새로고침으로 댓글 추가
+  function clickSendButton() {
+    const Sendbord = document.forms["sendForm"];
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    const created_date = `${year}-${month}-${day}`;
+
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    created_time = `${hours}:${minutes}`;
+
+    if (Sendbord.bordInputComment.value != "") {
+      const commentData = {
+        post_id: "<%= showPost[0].post_id%>",
+        signin_user_id: "<%= signinUser[0].signin_id%>",
+        content: Sendbord.bordInputComment.value,
+        created_date: created_date,
+        created_time: created_time,
+        msg: true,
+      };
+      axios({
+        method: "POST",
+        url: "/list/showPost",
+        data: commentData,
+      });
+      //댓글 업로드 후 새로고침(GET방식 실행)
+      alert("댓글 업로드");
+      Sendbord.bordInputComment.value = "";
+      window.location.href =
+        "/list/showPost?postId=<%= showPost[0].post_id%>";
+    } else {
+      alert("댓글을 작성해주세요");
+    }
+  }
+</script>
+
+</html>
